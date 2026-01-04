@@ -1,5 +1,7 @@
 import 'dart:convert';
+import '../domain/models/json_stats.dart';
 
+/// JSON 修復服務
 class JsonFixerService {
   /// 修復非標準 JSON（如 Dart Map 格式）轉為標準 JSON
   String fixJson(String input) {
@@ -42,9 +44,7 @@ class JsonFixerService {
 
   /// 移除 JSON 中的結尾逗號
   String _removeTrailingCommas(String input) {
-    // 移除 ,} 和 ,] 的情況（允許中間有空白）
     String result = input;
-    // 持續移除直到沒有變化
     String prev;
     do {
       prev = result;
@@ -61,7 +61,6 @@ class JsonFixerService {
     final buffer = StringBuffer();
     int i = 0;
 
-    // 結構字元
     bool isStructuralChar(String c) {
       return c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ',';
     }
@@ -69,7 +68,7 @@ class JsonFixerService {
     while (i < input.length) {
       final char = input[i];
 
-      // 跳過空白（但只在結構字元之間）
+      // 跳過空白
       if (char == ' ' || char == '\t' || char == '\n' || char == '\r') {
         buffer.write(char);
         i++;
@@ -94,7 +93,6 @@ class JsonFixerService {
             buffer.write(input[i + 1]);
             i += 2;
           } else {
-            // 處理需要轉義的字元
             if (input[i] == '"' && quote == "'") {
               buffer.write('\\"');
             } else {
@@ -104,20 +102,17 @@ class JsonFixerService {
           }
         }
         buffer.write('"');
-        if (i < input.length) i++; // 跳過結束引號
+        if (i < input.length) i++;
         continue;
       }
 
       // 數字開頭 - 檢查是否真的是數字
       if (char == '-' || _isDigit(char)) {
         final numStart = i;
-        bool isNumber = true;
 
-        // 嘗試解析數字
         int tempI = i;
         if (input[tempI] == '-') tempI++;
 
-        // 必須有數字
         if (tempI < input.length && _isDigit(input[tempI])) {
           while (tempI < input.length && _isDigit(input[tempI])) {
             tempI++;
@@ -147,19 +142,14 @@ class JsonFixerService {
               input[tempI] == '\t' ||
               input[tempI] == '\n' ||
               input[tempI] == '\r') {
-            // 是有效數字
             buffer.write(input.substring(numStart, tempI));
             i = tempI;
             continue;
           }
         }
-
-        // 不是數字，當作一般值處理（繼續往下）
-        isNumber = false;
       }
 
-      // 無引號的值（可能包含空格、分號等）
-      // 讀取直到遇到結構字元
+      // 無引號的值
       final valueStart = i;
       while (i < input.length && !isStructuralChar(input[i])) {
         i++;
@@ -167,15 +157,12 @@ class JsonFixerService {
       String value = input.substring(valueStart, i).trim();
 
       if (value.isNotEmpty) {
-        // 檢查是否是關鍵字
         if (value == 'true' || value == 'false' || value == 'null') {
           buffer.write(value);
         } else {
-          // 檢查是否是純數字
           if (_isValidNumber(value)) {
             buffer.write(value);
           } else {
-            // 其他都當字串處理，需要轉義內部的雙引號
             final escaped = value.replaceAll('"', '\\"');
             buffer.write('"$escaped"');
           }
@@ -186,7 +173,6 @@ class JsonFixerService {
     return buffer.toString();
   }
 
-  /// 檢查是否是有效的 JSON 數字
   bool _isValidNumber(String s) {
     if (s.isEmpty) return false;
     try {
@@ -199,23 +185,6 @@ class JsonFixerService {
 
   bool _isDigit(String char) {
     return char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57;
-  }
-
-  bool _isIdentifierStart(String char) {
-    final code = char.codeUnitAt(0);
-    return (code >= 65 && code <= 90) ||  // A-Z
-           (code >= 97 && code <= 122) || // a-z
-           char == '_' || char == '\$';
-  }
-
-  bool _isIdentifierPart(String char) {
-    final code = char.codeUnitAt(0);
-    return (code >= 65 && code <= 90) ||  // A-Z
-           (code >= 97 && code <= 122) || // a-z
-           (code >= 48 && code <= 57) ||  // 0-9
-           char == '_' || char == '\$' ||
-           char == '-' || char == '.' ||
-           char == '@';
   }
 
   /// 格式化 JSON
@@ -253,41 +222,7 @@ class JsonFixerService {
 
   /// 計算 JSON 統計資訊
   JsonStats getStats(String input) {
-    final lines = input.split('\n').length;
-    final bytes = utf8.encode(input).length;
-
-    bool isValid = false;
-    try {
-      json.decode(input);
-      isValid = true;
-    } catch (_) {}
-
-    return JsonStats(
-      lineCount: lines,
-      byteSize: bytes,
-      isValid: isValid,
-    );
-  }
-}
-
-class JsonStats {
-  final int lineCount;
-  final int byteSize;
-  final bool isValid;
-
-  const JsonStats({
-    required this.lineCount,
-    required this.byteSize,
-    required this.isValid,
-  });
-
-  String get formattedSize {
-    if (byteSize < 1024) {
-      return '$byteSize B';
-    } else if (byteSize < 1024 * 1024) {
-      return '${(byteSize / 1024).toStringAsFixed(1)} KB';
-    } else {
-      return '${(byteSize / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
+    if (input.isEmpty) return JsonStats.empty;
+    return JsonStats.fromJson(input);
   }
 }

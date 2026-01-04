@@ -1,20 +1,25 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../domain/models/json_stats.dart';
 import '../services/json_fixer_service.dart';
 
-// JsonFixerService Provider
+// === Service Provider ===
 final jsonFixerServiceProvider = Provider<JsonFixerService>((ref) {
   return JsonFixerService();
 });
 
-// 輸入文字 Provider
+// === State Providers ===
+
+/// 輸入文字 Provider
 final inputTextProvider = StateProvider<String>((ref) => '');
 
-// 格式化模式 Provider
+/// 格式化模式
 enum FormatMode { fix, format, minify }
+
+/// 格式化模式 Provider
 final formatModeProvider = StateProvider<FormatMode>((ref) => FormatMode.fix);
 
-// 輸出文字 Provider (即時修正 JSON，用於樹狀結構)
+/// 輸出文字 Provider (即時修正 JSON，用於樹狀結構)
 final outputTextProvider = Provider<String>((ref) {
   final input = ref.watch(inputTextProvider);
   final service = ref.watch(jsonFixerServiceProvider);
@@ -22,34 +27,32 @@ final outputTextProvider = Provider<String>((ref) {
   if (input.trim().isEmpty) return '';
 
   try {
-    final result = service.fixJson(input);
-    return result;
+    return service.fixJson(input);
   } catch (e) {
-    // 解析失敗時返回空字串，樹狀結構會顯示錯誤訊息
     return '';
   }
 });
 
-// 縮排設定 Provider
+/// 縮排設定 Provider
 final indentSizeProvider = StateProvider<int>((ref) => 2);
 
-// 輸入字體大小 Provider
+/// 輸入字體大小 Provider
 final inputFontSizeProvider = StateProvider<double>((ref) => 14.0);
 
-// 輸出字體大小 Provider
+/// 輸出字體大小 Provider
 final outputFontSizeProvider = StateProvider<double>((ref) => 14.0);
 
-// 錯誤訊息 Provider
+/// 錯誤訊息 Provider
 final errorMessageProvider = StateProvider<String?>((ref) => null);
 
-// JSON 統計資訊 Provider
+/// JSON 統計資訊 Provider
 final jsonStatsProvider = Provider<JsonStats>((ref) {
   final output = ref.watch(outputTextProvider);
   final service = ref.watch(jsonFixerServiceProvider);
   return service.getStats(output);
 });
 
-// JSON 驗證結果 Provider
+/// JSON 驗證結果 Provider
 final jsonValidationProvider = Provider<(bool, String?)>((ref) {
   final output = ref.watch(outputTextProvider);
   if (output.isEmpty) return (false, null);
@@ -57,7 +60,9 @@ final jsonValidationProvider = Provider<(bool, String?)>((ref) {
   return service.validateJson(output);
 });
 
-// 操作類
+// === Notifier ===
+
+/// JSON 編輯器操作類
 class JsonEditorNotifier extends Notifier<void> {
   @override
   void build() {}
@@ -123,6 +128,7 @@ class JsonEditorNotifier extends Notifier<void> {
   }
 }
 
+/// JSON 編輯器 Provider
 final jsonEditorProvider = NotifierProvider<JsonEditorNotifier, void>(() {
   return JsonEditorNotifier();
 });
