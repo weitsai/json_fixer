@@ -1,53 +1,226 @@
-# JSON Fixer
+# 🔧 JSON Fixer
 
-一個 Flutter macOS 桌面應用程式，用於修復和格式化非標準 JSON。
+<div align="center">
 
-## 開發背景
+![JSON Fixer Main Interface](docs/images/before_formatting.png)
 
-在 Flutter 開發中使用 Dio 套件時，後端回傳的 JSON 內容在 console log 中往往會失去雙引號，變成類似 Dart Map 的格式：
+**A powerful macOS desktop application for fixing and formatting non-standard JSON**
 
-```
+[![Flutter](https://img.shields.io/badge/Flutter-3.10.0-blue.svg)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-3.7.0-blue.svg)](https://dart.dev/)
+[![macOS](https://img.shields.io/badge/macOS-10.15+-green.svg)](https://www.apple.com/macos/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+</div>
+
+## 🎯 Why JSON Fixer?
+
+When developing Flutter applications with Dio package, backend JSON responses often lose their double quotes in console logs, becoming Dart Map-like format:
+
+```dart
+// ❌ What you see in console logs
 {name: John, age: 25, active: true}
+
+// ✅ What you need for JSON tools
+{"name": "John", "age": 25, "active": true}
 ```
 
-這種格式無法直接貼到 JSON 工具中使用，也難以閱讀複雜的巢狀結構。本專案就是為了解決這個痛點，讓開發者可以快速將 log 中的內容轉換為標準 JSON 格式。
+This format cannot be directly pasted into JSON tools and is difficult to read for complex nested structures. **JSON Fixer** solves this pain point by automatically converting console logs into standard JSON format.
 
-## 功能特色
+## ✨ Features
 
-- **自動修復 JSON** - 將非標準 JSON（如 Dart Map 格式、單引號字串、無引號 key）轉換為標準 JSON
-- **樹狀結構檢視** - 以階層方式瀏覽 JSON 結構
-- **統計資訊** - 顯示行數、檔案大小等資訊
+### 🔄 Smart JSON Repair
+- **Dart Map Format** → Standard JSON
+- **Single Quotes** → Double Quotes  
+- **Unquoted Keys** → Properly Quoted
+- **Missing Brackets** → Auto-completion
+- **Trailing Commas** → Automatic removal
 
-## 快速開始
+### 🌳 Tree View Visualization
+- Hierarchical JSON structure display
+- Expandable/collapsible nodes
+- Syntax highlighting with type identification
+- Click-to-copy values
+
+### 📊 Real-time Statistics
+- Line count and file size
+- JSON validation status
+- Error messages with helpful hints
+
+### 🎨 Modern UI/UX
+- Dark theme optimized for developers
+- Adjustable font sizes
+- Split-pane editor layout
+- Responsive design
+
+## 🖼️ Screenshots
+
+### Before: Raw Console Log Format
+![Before Formatting](docs/images/before_formatting.png)
+*Raw Dart Map format from console logs - difficult to read and use*
+
+### After: Clean JSON Format
+![After Formatting](docs/images/after_formatting.png)
+*Properly formatted JSON with syntax highlighting and tree view*
+
+### Key Features Demonstrated
+
+✅ **Smart JSON Repair**: Automatically converts Dart Map format to standard JSON  
+✅ **Syntax Highlighting**: Color-coded JSON elements for better readability  
+✅ **Tree View**: Hierarchical structure display with expand/collapse functionality  
+✅ **Real-time Validation**: Instant feedback on JSON validity  
+✅ **Statistics Display**: Line count, file size, and structure information  
+✅ **Modern UI**: Dark theme optimized for developers
+
+## 🚀 Quick Start
+
+### Prerequisites
+- macOS 10.15 or later
+- Flutter SDK 3.10.0+
+- Xcode (for macOS development)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/json_fixer.git
+   cd json_fixer
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Run the application**
+   ```bash
+   flutter run -d macos
+   ```
+
+### Building for Release
 
 ```bash
-# 安裝依賴
-flutter pub get
-
-# 執行應用程式
-flutter run -d macos
-```
-
-## 建置
-
-```bash
-# 建置 Release 版本
+# Build release version
 flutter build macos --release
+
+# The app will be available at:
+# build/macos/Build/Products/Release/json_fixer.app
 ```
 
-建置產物位於 `build/macos/Build/Products/Release/json_fixer.app`
+## 💡 Usage Examples
 
-## 專案架構
+### 🔄 Transformation Examples
+
+#### Example 1: Dart Map Format → Standard JSON
+```diff
+- {name: John Doe, age: 30, skills: [Flutter, Dart, JavaScript], active: true}
++ {
++   "name": "John Doe",
++   "age": 30,
++   "skills": ["Flutter", "Dart", "JavaScript"],
++   "active": true
++ }
+```
+
+#### Example 2: Single Quotes → Double Quotes
+```diff
+- {'user': {'name': 'Alice', 'email': 'alice@example.com'}}
++ {
++   "user": {
++     "name": "Alice",
++     "email": "alice@example.com"
++   }
++ }
+```
+
+#### Example 3: Mixed Format → Clean JSON
+```diff
+- {id: 123, user: {name: John, active: true}, tags: [mobile, web]}
++ {
++   "id": 123,
++   "user": {
++     "name": "John",
++     "active": true
++   },
++   "tags": ["mobile", "web"]
++ }
+```
+
+## 🏗️ Project Architecture
 
 ```
 lib/
-├── main.dart                 # 應用程式進入點
-├── app.dart                  # MaterialApp 配置
+├── main.dart                 # Application entry point
+├── app.dart                  # MaterialApp configuration
+├── core/
+│   └── theme/               # Global theme system
+│       ├── app_colors.dart
+│       ├── app_theme.dart
+│       └── ...
 ├── shared/
-│   └── theme/                # 全域主題系統
+│   └── widgets/             # Reusable components
 └── features/
     └── json_editor/
-        ├── presentation/     # UI 層（頁面與元件）
-        ├── providers/        # Riverpod 狀態管理
-        └── services/         # 業務邏輯（JSON 修復核心）
+        ├── domain/
+        │   └── models/      # Data models
+        ├── presentation/    # UI layer (pages & widgets)
+        │   ├── pages/
+        │   └── widgets/
+        │       ├── editor/
+        │       ├── toolbar/
+        │       ├── tree_view/
+        │       └── status_bar/
+        ├── providers/       # Riverpod state management
+        └── services/        # Business logic (JSON fixing core)
 ```
+
+## 🛠️ Technical Stack
+
+- **Framework:** Flutter 3.10.0
+- **Language:** Dart 3.7.0
+- **State Management:** Riverpod 3.x
+- **Code Editor:** re_editor with syntax highlighting
+- **Platform:** macOS (10.15+)
+- **Architecture:** Clean Architecture with Feature-first approach
+
+## 🔧 Key Components
+
+### JSON Fixer Service
+The core service that handles JSON repair logic:
+- Tokenization-based parsing
+- Smart quote detection and conversion
+- Automatic bracket completion
+- Trailing comma removal
+- Number and boolean value preservation
+
+### State Management
+Using Riverpod 3.x with code generation:
+- Type-safe state updates
+- Automatic dependency injection
+- DevTools integration for debugging
+
+### UI Components
+- **EditorToolbar:** File operations and JSON actions
+- **InputEditor:** Syntax-highlighted input area
+- **OutputViewer:** Tree view and formatted output
+- **StatusBar:** Validation results and statistics
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'feat: add some amazing feature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Flutter team for the amazing framework
+- Riverpod for excellent state management
+- re_editor for syntax highlighting capabilities
