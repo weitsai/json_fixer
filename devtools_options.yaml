@@ -1,0 +1,3 @@
+extensions:
+  - riverpod_devtools_extension: true
+  - riverpod_devtools_tracker: true
