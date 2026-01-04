@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/json.dart';
-import 'package:re_highlight/styles/atom-one-dark.dart';
-import '../../providers/json_editor_provider.dart';
-import '../../../../shared/theme/app_theme.dart';
-import 'toolbar.dart';
 
+import '../../../../../core/theme/app_theme.dart';
+import '../../../providers/json_editor_provider.dart';
+import '../toolbar/input_toolbar.dart';
+
+/// JSON 輸入編輯器
 class InputEditor extends ConsumerStatefulWidget {
   const InputEditor({super.key});
 
@@ -98,7 +99,7 @@ class _InputEditorState extends ConsumerState<InputEditor> {
   }
 }
 
-// 自訂的深色主題，配合我們的色彩系統
+/// 自訂的深色主題，配合我們的色彩系統
 Map<String, TextStyle> get _customDarkTheme => {
       'root': const TextStyle(
         backgroundColor: AppTheme.backgroundBase,
@@ -134,3 +135,4 @@ Map<String, TextStyle> get _customDarkTheme => {
       'emphasis': const TextStyle(fontStyle: FontStyle.italic),
       'strong': const TextStyle(fontWeight: FontWeight.bold),
     };
+

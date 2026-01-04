@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/json_editor_provider.dart';
-import '../../../../shared/theme/app_theme.dart';
-import 'toolbar.dart';
-import 'tree_view.dart';
 
+import '../../../../../core/theme/app_theme.dart';
+import '../../../providers/json_editor_provider.dart';
+import '../toolbar/output_toolbar.dart';
+import '../tree_view/json_tree_view.dart';
+
+/// JSON 輸出檢視器
 class OutputViewer extends ConsumerWidget {
   const OutputViewer({super.key});
 
@@ -25,3 +27,4 @@ class OutputViewer extends ConsumerWidget {
     );
   }
 }
+
