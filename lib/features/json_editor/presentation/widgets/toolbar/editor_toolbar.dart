@@ -26,37 +26,36 @@ class EditorToolbar extends ConsumerWidget {
         ),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Logo 區域
-          const LogoBadge(),
-          const SizedBox(width: 24),
+          // const LogoBadge(),
+          // const SizedBox(width: 24),
 
           // 分隔線
-          const AppVerticalDivider(),
-          const SizedBox(width: 20),
+          // const AppVerticalDivider(),
+          // const SizedBox(width: 20),
 
-          // 檔案操作
-          IconActionButton(
-            icon: Icons.folder_open_rounded,
-            tooltip: '開啟檔案',
-            onPressed: () => _uploadFile(ref),
-          ),
-          const SizedBox(width: 8),
-          IconActionButton(
-            icon: Icons.save_alt_rounded,
-            tooltip: '儲存檔案',
-            onPressed: () => _downloadFile(ref, context),
-          ),
-          const SizedBox(width: 20),
-
-          // 分隔線
-          const AppVerticalDivider(),
-          const SizedBox(width: 20),
+          // // 檔案操作
+          // IconActionButton(
+          //   icon: Icons.folder_open_rounded,
+          //   tooltip: '開啟檔案',
+          //   onPressed: () => _uploadFile(ref),
+          // ),
+          // const SizedBox(width: 8),
+          // IconActionButton(
+          //   icon: Icons.save_alt_rounded,
+          //   tooltip: '儲存檔案',
+          //   onPressed: () => _downloadFile(ref, context),
+          // ),
+          // const SizedBox(width: 20),
 
           // FIX 按鈕
           const FixButton(),
 
-          const Spacer(),
+          const AppVerticalDivider(),
+
+          const SizedBox(width: 20),
 
           // 清除按鈕
           IconActionButton(
