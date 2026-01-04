@@ -15,16 +15,8 @@
 ## 功能特色
 
 - **自動修復 JSON** - 將非標準 JSON（如 Dart Map 格式、單引號字串、無引號 key）轉換為標準 JSON
-- **即時預覽** - 左右分割視圖，左側輸入、右側即時顯示修復結果
 - **樹狀結構檢視** - 以階層方式瀏覽 JSON 結構
-- **格式化選項** - 支援格式化（可調整縮排）和壓縮功能
 - **統計資訊** - 顯示行數、檔案大小等資訊
-- **深色主題** - 精心設計的深色 UI 主題
-
-## 系統需求
-
-- macOS
-- Flutter SDK ^3.6.1
 
 ## 快速開始
 
@@ -59,26 +51,3 @@ lib/
         ├── providers/        # Riverpod 狀態管理
         └── services/         # 業務邏輯（JSON 修復核心）
 ```
-
-## 技術棧
-
-- **Flutter** - UI 框架
-- **Riverpod** - 狀態管理
-- **re_editor** - 程式碼編輯器元件
-
-## 開發
-
-```bash
-# 程式碼分析
-flutter analyze
-
-# 執行測試
-flutter test
-
-# 產生 Riverpod 程式碼（如使用 annotation）
-dart run build_runner build
-```
-
-## 授權
-
-私人專案
