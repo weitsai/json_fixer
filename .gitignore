@@ -46,3 +46,7 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# APPDMG
+appdmg.json
+json_fixer.dmg
